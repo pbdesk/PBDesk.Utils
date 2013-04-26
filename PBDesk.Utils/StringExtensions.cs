@@ -9,6 +9,8 @@
  *~*            Ver. 1.0     Date 12-Oct-2010       Pinal Bhatt
  *~*            Ver. 2.0     Date 21-Jun-2011       Pinal Bhatt
  *~*            Ver. 3.0     Date 05-Nov-2012       Pinal Bhatt - Converting to Portable Class Library
+ *~*            Ver. 4.0     Date 18-Apr-2013       Pinal Bhatt - Removed from Portable Class Library 
+ *~*                                                                and upgraded to .Net 4.5      
  *~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
 
 using System;
