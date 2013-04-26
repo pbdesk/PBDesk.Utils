@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>PBDesk.Utils</id>
+        <version>2013.04.18.1</version>
+        <title>PBDesk.Utils</title>
+        <authors>Pinal Bhatt</authors>
+        <owners>Pinal Bhatt</owners>
+        <projectUrl>https://github.com/pinalbhatt/PBDesk.Utils</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>PBDesk.Utils for .Net 4.5</description>
+        <summary>PBDesk.Utils for .Net 4.5</summary>
+        <releaseNotes>PBDesk.Utils 2013.04.10.1 for .Net 4.5</releaseNotes>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Core" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Data" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="" />
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+        <file src="lib\net40\PBDesk.Utils.dll" target="lib\net40\PBDesk.Utils.dll" />
+        <file src="..\..\PBDesk.Utils\bin\Release\PBDesk.Utils.dll" target="lib\net45\PBDesk.Utils.dll" />
+    </files>
+</package>
