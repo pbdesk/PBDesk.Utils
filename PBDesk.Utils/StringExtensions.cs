@@ -10,7 +10,8 @@
  *~*            Ver. 2.0     Date 21-Jun-2011       Pinal Bhatt
  *~*            Ver. 3.0     Date 05-Nov-2012       Pinal Bhatt - Converting to Portable Class Library
  *~*            Ver. 4.0     Date 18-Apr-2013       Pinal Bhatt - Removed from Portable Class Library 
- *~*                                                                and upgraded to .Net 4.5      
+ *~*                                                                and upgraded to .Net 4.5    
+ *~*            Ver. 5.0    Date 20-Oct-2013        Pinal Bhatt - Extenstion method  AppSetting added.
  *~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*/
 
 using System;
@@ -19,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace PBDesk.Utils
 {
@@ -241,5 +243,38 @@ namespace PBDesk.Utils
 
         #endregion
 
+        #region "AppSettings"
+
+        //One utility also available at
+        //https://drewnoakes.com/code/util/app-settings-util/AppSettingsUtil.cs
+
+        /// <summary>
+        /// Returns an application setting based on the passed in string
+        /// used primarily to cut down on typing
+        /// http://www.codeproject.com/Tips/513157/Quicker-Way-to-Get-To-ConfigurationManager-AppSett
+        /// </summary>
+        /// <param name="Key">The name of the key</param>
+        /// <returns>The value of the app setting in the web.Config or String.Empty if no setting found</returns>
+        public static string  AppSetting(this string Key, string defaultValue = "", bool throwExpIfNull = false)
+        {
+            if(defaultValue == null)
+            {
+                defaultValue = string.Empty;
+            }
+            string ret = defaultValue;
+            if (ConfigurationManager.AppSettings[Key] != null)
+            {
+                ret = ConfigurationManager.AppSettings[Key];
+            }
+            else
+            {
+                 if(throwExpIfNull)
+                 {
+                     throw new ConfigurationErrorsException("No application setting available for key: " + Key);
+                 }
+            }
+            return ret;
+        }
+        #endregion
     }
 }
