@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="CleanStart;Build;Nuget1;CleanEnd" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build;Nuget1;CleanEnd" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ArtifactsPath>$(MSBuildProjectDirectory)\Artifacts</ArtifactsPath>    
     <ProjectName>PBDesk.Utils</ProjectName>
-    <BuildNumber>0</BuildNumber>
+    <BuildRevision>0</BuildRevision>
     <BuildYear>$([System.DateTime]::Now.Year.ToString())</BuildYear>
     <BuildMonth>$([System.DateTime]::Now.Month.ToString())</BuildMonth>
     <BuildDate>$([System.DateTime]::Now.Day.ToString())</BuildDate>
-    <BuildVersion>$(BuildYear).$(BuildMonth).$(BuildDate).$(BuildNumber)</BuildVersion>
+    <BuildVersion>$(BuildYear).$(BuildMonth).$(BuildDate).$(BuildRevision)</BuildVersion>
     <PackageFolder>$(ProjectName).$(BuildVersion)</PackageFolder>
   </PropertyGroup>
   <ItemGroup>
     <ArtifactsFiles Include="$(ArtifactsPath)\**\*.*" />
   </ItemGroup>
-  <Target Name="Build" >
+  
+  <Import Project="$(MSBuildProjectDirectory)\MSBuild.ExtensionPack.4.0.8.0\MSBuild.ExtensionPack.tasks"/>
+  
+  <Target Name="Build" DependsOnTargets="CleanStart;SetVersion" >
     <Message Text="$(MSBuildProjectDirectory)" />
      <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
         Properties="Configuration=Release;OutputPath=$(ArtifactsPath)\net451\;IntermediateOutputPath=obj\Release\net451\;TargetFrameworkVersion=v4.5.1" />
@@ -27,16 +30,55 @@
   <Target Name="Nuget1">
     <Copy SourceFiles="@(ArtifactsFiles)" DestinationFolder="$(PackageFolder)\lib\%(RecursiveDir)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\PBDesk.Utils.nuspec" DestinationFiles="$(PackageFolder)\PBDesk.Utils.$(BuildVersion).nuspec" />
-    <GetAssemblyIdentity >
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="ReadElementText"
+                                       File="$(PackageFolder)\PBDesk.Utils.$(BuildVersion).nuspec"
+                                       
+                                       XPath="/package/metadata/version"
+                                       >
+      <Output PropertyName="MyValue" TaskParameter="Value"/>
+      
+    
+    </MSBuild.ExtensionPack.Xml.XmlFile>
+    
+<Message Text="globalPropertyGroup Text = $(MyValue)"/>
+
+    <MSBuild.ExtensionPack.Xml.XmlFile TaskAction="UpdateElement" 
+                                       File="$(PackageFolder)\PBDesk.Utils.$(BuildVersion).nuspec" 
+                                       XPath="/package/metadata/version" 
+                                       InnerText="test"/>
+    <!--<GetAssemblyIdentity >
      
-    </GetAssemblyIdentity>
+    </GetAssemblyIdentity>-->
   </Target>
+  
+  <Target Name="SetVersion">
+    <ItemGroup>
+      <AssemblyInfoFiles Include="$(MSBuildProjectDirectory)\..\PBDesk.Utils\**\AssemblyInfo.cs" />
+    </ItemGroup>
+  
+    <Message Text="SetVersions Called" />
+    <Message Text="@(AssemblyInfoFiles)" />
+    <MSBuild.ExtensionPack.Framework.AssemblyInfo AssemblyInfoFiles="@(AssemblyInfoFiles)"
+                AssemblyFileMajorVersion="$(BuildYear)"
+                AssemblyFileMinorVersion="$(BuildMonth)" 
+                AssemblyFileBuildNumber="$(BuildDate)"
+                AssemblyFileRevision="$(BuildRevision)"
+                AssemblyMajorVersion="$(BuildYear)"       
+                AssemblyMinorVersion="$(BuildMonth)"
+                AssemblyBuildNumber="$(BuildDate)"
+                AssemblyRevision="$(BuildRevision)"      
+              />
+  </Target>
+    
   <Target Name="CleanStart">
-    <!--<RemoveDir Directories="$(ArtifactsPath)" />
-    <RemoveDir Directories="$(PackageFolder)" />-->
+    <Message Text="CleanStart" />
+    <!--<RemoveDir Directories="$(ArtifactsPath)\" Condition="Exists($(ArtifactsPath))" />
+    <RemoveDir Directories="$(PackageFolder)" Condition="Exists($(PackageFolder))" />-->
   </Target>
   <Target Name="CleanEnd">
-    <!--<RemoveDir Directories="$(ArtifactsPath)" />-->
+    <Message Text="CleanEnd" />
+    <!--<RemoveDir Directories="$(ArtifactsPath)" Condition="Exists($(ArtifactsPath))" />-->
   </Target>
 </Project>
 
