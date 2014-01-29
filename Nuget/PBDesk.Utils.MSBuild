@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="CleanStart;Build;Nuget1;CleanEnd" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ArtifactsPath>$(MSBuildProjectDirectory)\Artifacts</ArtifactsPath>
+    <ArtifactsPath>$(MSBuildProjectDirectory)\Artifacts</ArtifactsPath>    
+    <ProjectName>PBDesk.Utils</ProjectName>
+    <BuildNumber>0</BuildNumber>
+    <BuildYear>$([System.DateTime]::Now.Year.ToString())</BuildYear>
+    <BuildMonth>$([System.DateTime]::Now.Month.ToString())</BuildMonth>
+    <BuildDate>$([System.DateTime]::Now.Day.ToString())</BuildDate>
+    <BuildVersion>$(BuildYear).$(BuildMonth).$(BuildDate).$(BuildNumber)</BuildVersion>
+    <PackageFolder>$(ProjectName).$(BuildVersion)</PackageFolder>
   </PropertyGroup>
-  <Target Name="Build">
+  <ItemGroup>
+    <ArtifactsFiles Include="$(ArtifactsPath)\**\*.*" />
+  </ItemGroup>
+  <Target Name="Build" >
     <Message Text="$(MSBuildProjectDirectory)" />
-    <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
+     <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
         Properties="Configuration=Release;OutputPath=$(ArtifactsPath)\net451\;IntermediateOutputPath=obj\Release\net451\;TargetFrameworkVersion=v4.5.1" />
     <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
         Properties="Configuration=Release;OutputPath=$(ArtifactsPath)\net45\;IntermediateOutputPath=obj\Release\net45\;TargetFrameworkVersion=v4.5" />
     <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
         Properties="Configuration=Release;OutputPath=$(ArtifactsPath)\net40\;IntermediateOutputPath=obj\Release\net40\;TargetFrameworkVersion=v4.0" />
-    <!-- <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
+    <!--  <MSBuild Projects="..\PBDesk.Utils\PBDesk.Utils.csproj"
         Properties="Configuration=Release;OutputPath=$(ArtifactsPath)\net35\;IntermediateOutputPath=obj\Release\net35\;TargetFrameworkVersion=v3.5" />-->
+  </Target>
+  <Target Name="Nuget1">
+    <Copy SourceFiles="@(ArtifactsFiles)" DestinationFolder="$(PackageFolder)\lib\%(RecursiveDir)" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\PBDesk.Utils.nuspec" DestinationFiles="$(PackageFolder)\PBDesk.Utils.$(BuildVersion).nuspec" />
+    <GetAssemblyIdentity >
+     
+    </GetAssemblyIdentity>
+  </Target>
+  <Target Name="CleanStart">
+    <!--<RemoveDir Directories="$(ArtifactsPath)" />
+    <RemoveDir Directories="$(PackageFolder)" />-->
+  </Target>
+  <Target Name="CleanEnd">
+    <!--<RemoveDir Directories="$(ArtifactsPath)" />-->
   </Target>
 </Project>
 
